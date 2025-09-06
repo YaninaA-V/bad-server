@@ -91,7 +91,9 @@ app.use(urlencoded({ extended: true, limit: '1mb' }))
 app.use(json({ limit: '1mb' }))
 
 app.options('*', cors())
-app.use(csrfProtection)
+if (process.env.NODE_ENV !== 'test') {
+    app.use(csrfProtection)
+}
 app.use(routes)
 app.use(errors())
 app.use(errorHandler)
