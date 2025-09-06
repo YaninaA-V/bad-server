@@ -11,6 +11,7 @@ services:
     image: mongo
     restart: always
     environment:
+      NODE_ENV: development 
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
     volumes:

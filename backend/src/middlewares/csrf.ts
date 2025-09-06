@@ -1,22 +1,46 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response, NextFunction } from 'express'
+import { verify, sign } from 'jsonwebtoken' 
+import { ACCESS_TOKEN } from '../config'
 
-const allowedOrigins = [
-    process.env.ORIGIN_ALLOW || 'http://localhost:3000',
-    'http://localhost:3000' 
-]
+export const csrfProtection = (req: Request, res: Response, next: NextFunction) => {    
+    if (process.env.NODE_ENV !== 'production') {
+        return next()
+    }    
 
-export const csrfProtection = (req: Request, res: Response, next: NextFunction) => {
-    if(['POST', 'PUT', 'PATCH', 'DELETE'].includes(req.method)) {
-        const {origin} = req.headers
-
-        if(!origin || !allowedOrigins.includes(origin)) {
+    if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(req.method)) {
+        const csrfToken = req.headers['x-csrf-token'] as string || req.body._csrf
+        
+        if (!csrfToken) {
             return res.status(403).json({ 
-                error: 'CORS policy: Origin not allowed',
-                message: 'Запрос с данного домена запрещен' 
+                error: 'CSRF token required',
+                message: 'Отсутствует CSRF токен' 
             })
         }
-        next()
+
+        try {
+            verify(csrfToken, ACCESS_TOKEN.secret)
+            next()
+        } catch (error) {
+            return res.status(403).json({ 
+                error: 'Invalid CSRF token',
+                message: 'Недействительный CSRF токен' 
+            })
+        }
     } else {
         next()
     }
+}
+
+export const generateCsrfToken = (req: Request, res: Response, next: NextFunction) => {
+    if (process.env.NODE_ENV === 'production') {
+        const csrfToken = sign( 
+            { type: 'csrf' },
+            ACCESS_TOKEN.secret,
+            { expiresIn: '1h' }
+        )
+        res.locals.csrfToken = csrfToken
+    } else {
+        res.locals.csrfToken = 'dev-csrf-token'
+    }
+    next()
 }
