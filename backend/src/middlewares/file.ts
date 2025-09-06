@@ -27,6 +27,10 @@ const storage = multer.diskStorage({
         file: Express.Multer.File,
         cb: FileNameCallback
     ) => {
+        if (file.originalname.includes('../') || file.originalname.includes('..\\')) {
+        return cb(new Error('Path traversal attempt detected'), '')
+    }
+    
         const randomName = Date.now() + '-' + Math.random().toString(36).substring(7)
         const extension = path.extname(file.originalname)
         cb(null, randomName + extension)
