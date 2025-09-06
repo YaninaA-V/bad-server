@@ -1,6 +1,6 @@
 import { Request, Express } from 'express'
 import multer, { FileFilterCallback } from 'multer'
-import { join } from 'path'
+import path, { join } from 'path'
 
 type DestinationCallback = (error: Error | null, destination: string) => void
 type FileNameCallback = (error: Error | null, filename: string) => void
@@ -31,7 +31,9 @@ const storage = multer.diskStorage({
         file: Express.Multer.File,
         cb: FileNameCallback
     ) => {
-        cb(null, Date.now() + '-' + Math.random().toString(36).substring(7))
+        const randomName = Date.now() + '-' + Math.random().toString(36).substring(7)
+        const extension = path.extname(file.originalname)
+        cb(null, randomName + extension)
     },
 })
 

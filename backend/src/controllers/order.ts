@@ -49,6 +49,13 @@ export const getOrders = async (
             }
         }
 
+        if (status && typeof status === 'object') {
+            return res.status(400).json({
+                error: 'Invalid status format',
+                message: 'Status must be a string, not an object' 
+    })
+        }
+
         if (totalAmountFrom) {
             filters.totalAmount = {
                 ...filters.totalAmount,
