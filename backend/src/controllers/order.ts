@@ -37,7 +37,7 @@ export const getOrders = async (
             search,
         } = req.query
 
-        const validatedLimit = Math.min(Math.max(Number(limit), 1), 100)
+        const validatedLimit = Math.min(Math.max(Number(limit), 1), 10)
         const validatedPage = Math.max(Number(page), 1)
 
         const filters: FilterQuery<Partial<IOrder>> = {}
@@ -169,7 +169,7 @@ export const getOrdersCurrentUser = async (
         const userId = res.locals.user._id
         const { search, page = 1, limit = 5 } = req.query
 
-        const validatedLimit = Math.min(Math.max(Number(limit), 1), 100)
+        const validatedLimit = Math.min(Math.max(Number(limit), 1), 10)
         const validatedPage = Math.max(Number(page), 1)
 
         const options = {

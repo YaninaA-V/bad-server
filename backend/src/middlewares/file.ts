@@ -31,7 +31,7 @@ const storage = multer.diskStorage({
         file: Express.Multer.File,
         cb: FileNameCallback
     ) => {
-        cb(null, file.originalname)
+        cb(null, Date.now() + '-' + Math.random().toString(36).substring(7))
     },
 })
 
