@@ -106,9 +106,12 @@ const userSchema = new mongoose.Schema<IUser, IUserModel, IUserMethods>(
         toJSON: {
             virtuals: true,
             transform: (_doc, ret) => {
+                // @ts-ignore
                 delete ret.tokens
+                // @ts-ignore
                 delete ret.password
                 delete ret._id
+                // @ts-ignore
                 delete ret.roles
                 return ret
             },
@@ -135,7 +138,7 @@ userSchema.methods.generateAccessToken = function generateAccessToken() {
     // Создание accessToken токена возможно в контроллере авторизации
     return jwt.sign(
         {
-            _id: user._id.toString(),
+            _id: (user._id as Types.ObjectId).toString(),
             email: user.email,
         },
         ACCESS_TOKEN.secret,
@@ -152,7 +155,7 @@ userSchema.methods.generateRefreshToken =
         // Создание refresh токена возможно в контроллере авторизации/регистрации
         const refreshToken = jwt.sign(
             {
-                _id: user._id.toString(),
+                _id: (user._id as Types.ObjectId).toString(),
             },
             REFRESH_TOKEN.secret,
             {

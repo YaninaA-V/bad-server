@@ -29,6 +29,9 @@ export const getCustomers = async (
             search,
         } = req.query
 
+        const validatedLimit = Math.min(Math.max(Number(limit), 1), 10)
+        const validatedPage = Math.max(Number(page), 1)
+
         const filters: FilterQuery<Partial<IUser>> = {}
 
         if (registrationDateFrom) {
@@ -92,7 +95,8 @@ export const getCustomers = async (
         }
 
         if (search) {
-            const searchRegex = new RegExp(search as string, 'i')
+            const sanitizedSearch = (search as string).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+            const searchRegex = new RegExp(sanitizedSearch, 'i')
             const orders = await Order.find(
                 {
                     $or: [{ deliveryAddress: searchRegex }],
@@ -116,8 +120,8 @@ export const getCustomers = async (
 
         const options = {
             sort,
-            skip: (Number(page) - 1) * Number(limit),
-            limit: Number(limit),
+            skip: (validatedPage - 1) * validatedLimit,
+            limit: validatedLimit,
         }
 
         const users = await User.find(filters, null, options).populate([
@@ -137,15 +141,15 @@ export const getCustomers = async (
         ])
 
         const totalUsers = await User.countDocuments(filters)
-        const totalPages = Math.ceil(totalUsers / Number(limit))
+        const totalPages = Math.ceil(totalUsers / validatedLimit)
 
         res.status(200).json({
             customers: users,
             pagination: {
                 totalUsers,
                 totalPages,
-                currentPage: Number(page),
-                pageSize: Number(limit),
+                currentPage: validatedPage,
+                pageSize: validatedLimit,
             },
         })
     } catch (error) {
