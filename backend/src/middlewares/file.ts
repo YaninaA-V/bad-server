@@ -11,10 +11,6 @@ const storage = multer.diskStorage({
         _file: Express.Multer.File,
         cb: DestinationCallback
     ) => {
-        const originalName = _file.originalname
-        if (originalName.includes('../') || originalName.includes('..\\')) {
-            return cb(new Error('Недопустимое имя файла'), '')
-        }
         cb(
             null,
             join(
