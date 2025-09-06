@@ -9,7 +9,7 @@ import { DB_ADDRESS } from './config'
 import errorHandler from './middlewares/error-handler'
 import serveStatic from './middlewares/serverStatic'
 import routes from './routes'
-import { csrfProtection } from './middlewares/csrf'
+import { csrfProtection, generateCsrfToken } from './middlewares/csrf'
 
 const { PORT = 3000 } = process.env
 const app = express()
@@ -82,6 +82,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 })
 
 app.use(cookieParser())
+app.use(generateCsrfToken)
 
 app.use(cors({ origin: process.env.ORIGIN_ALLOW, credentials: true }));
 
