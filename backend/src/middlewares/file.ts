@@ -11,6 +11,10 @@ const storage = multer.diskStorage({
         _file: Express.Multer.File,
         cb: DestinationCallback
     ) => {
+        const originalName = _file.originalname
+        if (originalName.includes('../') || originalName.includes('..\\')) {
+            return cb(new Error('Недопустимое имя файла'), '')
+        }
         cb(
             null,
             join(
@@ -51,4 +55,12 @@ const fileFilter = (
     return cb(null, true)
 }
 
-export default multer({ storage, fileFilter })
+export default multer({ 
+    storage, 
+    fileFilter,
+    limits: {
+        fileSize: 10 * 1024 * 1024, 
+        files: 1, 
+        fieldSize: 10 * 1024 * 1024 
+    }
+ })

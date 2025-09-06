@@ -189,10 +189,10 @@ const updateCurrentUser = async (
     req: Request,
     res: Response,
     next: NextFunction
-) => {
-    const userId = res.locals.user._id
+) => {    
     try {
-        const updatedUser = await User.findByIdAndUpdate(userId, req.body, {
+        const { name, email } = req.body
+        const updatedUser = await User.findByIdAndUpdate(req.params.id, { name, email }, {
             new: true,
         }).orFail(
             () =>
