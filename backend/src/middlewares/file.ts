@@ -1,3 +1,4 @@
+import { randomUUID } from 'crypto'
 import { Request, Express } from 'express'
 import multer, { FileFilterCallback } from 'multer'
 import path, { join } from 'path'
@@ -27,9 +28,8 @@ const storage = multer.diskStorage({
         file: Express.Multer.File,
         cb: FileNameCallback
     ) => {
-        const randomName = Date.now() + '-' + Math.random().toString(36).substring(7)
-        const extension = path.extname(file.originalname)
-        cb(null, randomName + extension)
+        const newName = randomUUID();
+        cb(null, newName);
     },
 })
 
@@ -51,6 +51,13 @@ const fileFilter = (
         return cb(null, false)
     }
 
+    const minSizeBytes = 2 * 1024;
+    if (file.size < minSizeBytes) {
+        const error = new Error('File too small') as any;
+        error.code = 'FILE_TOO_SMALL';
+        return cb(error, false);
+    }
+
     return cb(null, true)
 }
 
@@ -58,7 +65,7 @@ export default multer({
     storage, 
     fileFilter,
     limits: {
-        fileSize: 2 * 1024,
+        fileSize: 10 * 1024 * 1024,
         files: 1, 
         fieldSize: 10 * 1024 * 1024 
     }
