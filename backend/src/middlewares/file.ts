@@ -12,15 +12,7 @@ const storage = multer.diskStorage({
         _file: Express.Multer.File,
         cb: DestinationCallback
     ) => {
-        cb(
-            null,
-            join(
-                __dirname,
-                process.env.UPLOAD_PATH_TEMP
-                    ? `../public/${process.env.UPLOAD_PATH_TEMP}`
-                    : '../public'
-            )
-        )
+        cb(null, '/app/src/public/temp/');
     },
 
     filename: (
@@ -29,8 +21,7 @@ const storage = multer.diskStorage({
         cb: FileNameCallback
     ) => {
         const newName = randomUUID();
-        const extension = path.extname(file.originalname);
-        cb(null, newName + extension);
+        cb(null, newName);
     },
 })
 
