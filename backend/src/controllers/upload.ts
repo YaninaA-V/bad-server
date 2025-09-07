@@ -11,7 +11,7 @@ export const uploadFile = async (
         return next(new BadRequestError('Файл не загружен'))
     }
     try {
-        const fileName = `/${process.env.UPLOAD_PATH || 'uploads'}/${req.file.filename}`;
+        const fileName = `/uploads/${req.file.filename}`;
             
         return res.status(201).json({
             fileName, 
