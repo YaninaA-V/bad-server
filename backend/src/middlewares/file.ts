@@ -53,7 +53,7 @@ const fileFilter = (
     return cb(null, true)
 }
 
-export default multer({ 
+const fileMiddleware = multer({ 
     storage, 
     fileFilter,
     limits: {
@@ -62,3 +62,5 @@ export default multer({
         fieldSize: 10 * 1024 * 1024 
     }
  })
+
+ export default fileMiddleware
