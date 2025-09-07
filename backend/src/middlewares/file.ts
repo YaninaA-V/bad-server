@@ -39,6 +39,7 @@ const types = [
     'image/jpeg',
     'image/gif',
     'image/svg+xml',
+    'text/plain',
 ]
 
 const fileFilter = (
