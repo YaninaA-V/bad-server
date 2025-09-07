@@ -29,7 +29,8 @@ const storage = multer.diskStorage({
         cb: FileNameCallback
     ) => {
         const newName = randomUUID();
-        cb(null, newName);
+        const extension = path.extname(file.originalname);
+        cb(null, newName + extension);
     },
 })
 
