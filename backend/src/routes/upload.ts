@@ -4,6 +4,6 @@ import fileMiddleware from '../middlewares/file'
 import { checkFilename } from '../middlewares/check-filename'
 
 const uploadRouter = Router()
-uploadRouter.post('/', checkFilename, fileMiddleware.single('file'), uploadFile)
+uploadRouter.post('/', fileMiddleware.single('file'), checkFilename, uploadFile)
 
 export default uploadRouter
