@@ -50,14 +50,6 @@ const fileFilter = (
     if (!types.includes(file.mimetype)) {
         return cb(null, false)
     }
-
-    const minSizeBytes = 2 * 1024;
-    if (file.size < minSizeBytes) {
-        const error = new Error('File too small') as any;
-        error.code = 'FILE_TOO_SMALL';
-        return cb(error, false);
-    }
-
     return cb(null, true)
 }
 
