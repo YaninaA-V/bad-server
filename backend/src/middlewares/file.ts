@@ -6,24 +6,25 @@ import path, { join } from 'path'
 type DestinationCallback = (error: Error | null, destination: string) => void
 type FileNameCallback = (error: Error | null, filename: string) => void
 
-const storage = multer.diskStorage({
-    destination: (
-        _req: Request,
-        _file: Express.Multer.File,
-        cb: DestinationCallback
-    ) => {
-        cb(null, '/app/src/public/temp/');
-    },
-
-    filename: (
-        _req: Request,
-        file: Express.Multer.File,
-        cb: FileNameCallback
-    ) => {
-        const newName = randomUUID();
-        cb(null, newName);
-    },
-})
+const storage = process.env.NODE_ENV === 'test' 
+    ? multer.memoryStorage()
+    : multer.diskStorage({
+        destination: (
+            _req: Request,
+            _file: Express.Multer.File,
+            cb: (error: Error | null, destination: string) => void
+        ) => {
+            cb(null, '/app/src/public/temp/');
+        },
+        filename: (
+            _req: Request,
+            file: Express.Multer.File,
+            cb: (error: Error | null, filename: string) => void
+        ) => {
+            const newName = randomUUID();
+            cb(null, newName);
+        },
+    });
 
 const types = [
     'image/png',
