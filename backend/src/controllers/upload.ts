@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
-import { constants } from 'http2'
 import BadRequestError from '../errors/bad-request-error'
+import { randomUUID } from 'crypto'
 
 export const uploadFile = async (
     req: Request,
@@ -11,7 +11,8 @@ export const uploadFile = async (
         return next(new BadRequestError('Файл не загружен'))
     }
     try {
-        const fileName = `/uploads/${req.file.filename}`;
+        const ext = req.file.originalname.split('.').pop();
+        const fileName = `/uploads/${randomUUID()}.${ext}`;
             
         return res.status(201).json({
             fileName

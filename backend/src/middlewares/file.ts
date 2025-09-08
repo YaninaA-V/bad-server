@@ -1,35 +1,7 @@
-import { randomUUID } from 'crypto'
-import { Request, Express } from 'express'
+import { Request } from 'express'
 import multer, { FileFilterCallback } from 'multer'
-import path, { join } from 'path'
-import * as fs from 'fs'
 
-const uploadDir = '/app/src/public/temp/';
-if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir, { recursive: true });
-}
-
-type DestinationCallback = (error: Error | null, destination: string) => void
-type FileNameCallback = (error: Error | null, filename: string) => void
-const storage = multer.diskStorage({
-    destination: (
-        _req: Request,
-        _file: Express.Multer.File,
-        cb: DestinationCallback
-    ) => {
-        cb(null, uploadDir);
-    },
-
-    filename: (
-        _req: Request,
-        file: Express.Multer.File,
-        cb: FileNameCallback
-    ) => {
-        const ext = path.extname(file.originalname);
-        const newName = randomUUID().replace(/\./g, '') + ext;
-        cb(null, newName);
-    },
-})
+const storage = multer.memoryStorage();
 
 const types = [
     'image/png',
@@ -46,9 +18,10 @@ const fileFilter = (
     cb: FileFilterCallback
 ) => {
     if (!types.includes(file.mimetype)) {
-        return cb(null, false)
+        cb(null, true);
+    } else {
+        cb(null, false);
     }
-    return cb(null, true)
 }
 
 export default multer({ 
