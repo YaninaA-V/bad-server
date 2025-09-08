@@ -2,6 +2,12 @@ import { randomUUID } from 'crypto'
 import { Request, Express } from 'express'
 import multer, { FileFilterCallback } from 'multer'
 import path, { join } from 'path'
+import * as fs from 'fs'
+
+const uploadDir = '/app/src/public/temp/';
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+}
 
 type DestinationCallback = (error: Error | null, destination: string) => void
 type FileNameCallback = (error: Error | null, filename: string) => void
@@ -11,7 +17,7 @@ const storage = multer.diskStorage({
         _file: Express.Multer.File,
         cb: DestinationCallback
     ) => {
-        cb(null, '/app/src/public/temp/');
+        cb(null, uploadDir);
     },
 
     filename: (
@@ -19,7 +25,8 @@ const storage = multer.diskStorage({
         file: Express.Multer.File,
         cb: FileNameCallback
     ) => {
-        const newName = randomUUID().replace(/\./g, '');
+        const ext = path.extname(file.originalname);
+        const newName = randomUUID().replace(/\./g, '') + ext;
         cb(null, newName);
     },
 })
