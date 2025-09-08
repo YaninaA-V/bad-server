@@ -14,8 +14,7 @@ export const uploadFile = async (
         const fileName = `/uploads/${req.file.filename}`;
             
         return res.status(201).json({
-            fileName, 
-            originalName: req.file.originalname,
+            fileName
         })
     } catch (error) {
         return next(error)
