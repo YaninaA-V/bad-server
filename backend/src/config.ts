@@ -22,3 +22,19 @@ export const REFRESH_TOKEN = {
         } as CookieOptions,
     },
 }
+
+export const CSRF_SECRET = 'csrf-secret'
+export const COOKIES_SECRET = 'cookie-secret'
+export const CSRF_COOKIE_NAME = 'n-csrf-token'
+
+export const MIN_SIZE_FILE = 2 * 1024;
+export const MAX_SIZE_FILE = 10 * 1024 * 1024;
+export const UPLOAD_TYPES = [
+    'image/png',
+    'image/jpg',
+    'image/jpeg',
+    'image/gif',
+    'image/svg+xml',
+    'text/plain',
+]
+export const MAX_REQUEST = 30;
