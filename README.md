@@ -15,4 +15,4 @@ docker compose up -d
 ## Ссылка на мой репозиторий 
 git@github.com:YaninaA-V/bad-server.git
 
-
+Янина Андреева, 27 когорта, фулстек

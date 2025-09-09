@@ -15,10 +15,26 @@ export const REFRESH_TOKEN = {
         name: 'refreshToken',
         options: {
             httpOnly: true,
-            sameSite: 'lax',
+            sameSite: 'strict',
             secure: false,
             maxAge: ms(process.env.AUTH_REFRESH_TOKEN_EXPIRY || '7d'),
             path: '/',
         } as CookieOptions,
     },
 }
+
+export const CSRF_SECRET = 'csrf-secret'
+export const COOKIES_SECRET = 'cookie-secret'
+export const CSRF_COOKIE_NAME = 'n-csrf-token'
+
+export const MIN_SIZE_FILE = 2 * 1024;
+export const MAX_SIZE_FILE = 10 * 1024 * 1024;
+export const UPLOAD_TYPES = [
+    'image/png',
+    'image/jpg',
+    'image/jpeg',
+    'image/gif',
+    'image/svg+xml',
+    'text/plain',
+]
+export const MAX_REQUEST = 30;
